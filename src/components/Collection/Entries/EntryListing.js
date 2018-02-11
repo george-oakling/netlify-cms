@@ -37,7 +37,20 @@ export default class EntryListing extends React.Component {
     const { collections, entries, publicFolder, viewStyle } = this.props;
     const inferedFields = this.inferFields(collections);
     const entryCardProps = { collection: collections, inferedFields, publicFolder, viewStyle };
-    return entries.map((entry, idx) => <EntryCard {...{ ...entryCardProps, entry, key: idx }} />);
+    return entries.sort((a, b) => {
+      const aDate = Date.parse(a.getIn(['data', 'date']));
+      const bDate = Date.parse(b.getIn(['data', 'date']));
+
+      if(aDate < bDate) {
+        return 1;
+      };
+
+      if(aDate > bDate) {
+        return -1;
+      };
+
+      return 0;
+    }).map((entry, idx) => <EntryCard {...{ ...entryCardProps, entry, key: idx }} />);
   };
 
   renderCardsForMultipleCollections = () => {
